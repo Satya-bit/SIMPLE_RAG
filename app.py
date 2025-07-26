@@ -47,7 +47,7 @@ if submit_button:
 
 # Only show chat input if retriever and llm are available
 if st.session_state['retriever'] and st.session_state['llm']:
-    query = st.chat_input("Ask me anything: ")
+    query = st.chat_input("Ask me anything related to provided URL: ")
     system_prompt = (
         "You are an assistant for question-answering tasks. "
         "Use the following pieces of retrieved context to answer "
