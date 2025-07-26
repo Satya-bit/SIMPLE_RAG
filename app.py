@@ -29,16 +29,19 @@ if 'llm' not in st.session_state:
 
 if submit_button:
     if urls:
-        url_list = [urls]
-        loader = UnstructuredURLLoader(urls=url_list)
-        data = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000)
-        docs = text_splitter.split_documents(data)
-        all_splits = docs
-        vectorstore = FAISS.from_documents(all_splits, OpenAIEmbeddings())
-        st.session_state['retriever'] = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
-        st.session_state['llm'] = OpenAI(temperature=0.4, max_tokens=500)
-        st.success("URL processed. You can now ask questions.")
+        try:
+            url_list = [urls]
+            loader = UnstructuredURLLoader(urls=url_list)
+            data = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000)
+            docs = text_splitter.split_documents(data)
+            all_splits = docs
+            vectorstore = FAISS.from_documents(all_splits, OpenAIEmbeddings())
+            st.session_state['retriever'] = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+            st.session_state['llm'] = OpenAI(temperature=0.4, max_tokens=500)
+            st.success("URL processed. You can now ask questions.")
+        except Exception as e:
+            st.error("Please enter a correct URL or check your connection.")
     else:
         st.write("Please enter a URL to proceed.")
 
