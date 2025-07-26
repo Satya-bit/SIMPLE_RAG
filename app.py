@@ -11,9 +11,6 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from dotenv import load_dotenv
 load_dotenv()
-import sys
-import pysqlite3
-sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 
 
