@@ -3,7 +3,7 @@ import time
 from langchain_openai import OpenAI
 from langchain_community.document_loaders import UnstructuredURLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -12,10 +12,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 load_dotenv()
 
-# __import__('pysqlite3')
-# import sys
 
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 
 st.title("RAG App Demo")
@@ -38,7 +35,7 @@ if submit_button:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000)
         docs = text_splitter.split_documents(data)
         all_splits = docs
-        vectorstore = Chroma.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
+        vectorstore = FAISS.from_documents(all_splits, OpenAIEmbeddings())
         st.session_state['retriever'] = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
         st.session_state['llm'] = OpenAI(temperature=0.4, max_tokens=500)
         st.success("URL processed. You can now ask questions.")
